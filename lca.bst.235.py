@@ -9,36 +9,49 @@ class Solution:
         self.root = root
         self.path = []
         self.var = 0
-        self.treeTraversal(p.val)
-        return self.treeTraversal(q.val, 2)
-
-    def treeTraversal(self, target, traversalCount=1):
-        currNode, prevNode = self.root, None
+        self.modTraversal(root, p, False)
+        res = self.modTraversal(root, q, True)
+        return res
+    
+    # ensure all the inputs are non null
+    def modTraversal(self, root, value, repeat=False):
+        print(value)
+        node = root
+        previous = None
+        indx = 0
         while True:
-            if traversalCount == 1:
-                self.path.append(currNode.val)
+            if not repeat:
+                self.path.append(node.val)
             else:
-                if self.path[self.var] == currNode.val:
-                    self.var += 1
+                print(self.path, indx, node.val)
+                if len(self.path) <= indx:
+                    break
+                if self.path[indx] != node.val:
+                    break
                 else:
-                    return prevNode #LCA
+                    indx += 1
+                    previous = node
 
-            if currNode.val != target:
-                if currNode.val > target:
-                    if currNode.left is not None:
-                        prevNode = currNode
-                        currNode = currNode.left
-                    else:
-                        break 
-                elif currNode.val > target:
-                    if currNode.right is not None:
-                        prevNode = currNode
-                        currNode = currNode.right
-                    else:
-                        break
+            if node.val > value:
+                if node.left:
+                    node = node.left
+                else:
+                    print(f'match not found')
+                    break
+
+            elif node.val < value:
+                if node.right:
+                    node = node.right
+                else:
+                    print(f'match not found')
+                    break
+            
             else:
-                return currNode
-
+                print(f'match found {node.val} and  {value}')
+                break
+        return previous
+    
+    
 from unittest import TestCase
 class Tests(unittest.TestCase):
     def testcaseone(self):
